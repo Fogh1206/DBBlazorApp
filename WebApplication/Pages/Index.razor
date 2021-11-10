@@ -1,0 +1,69 @@
+@page "/"
+@using WebApplication.DataAccess
+
+<h1>Hello, world!</h1>
+
+Welcome to your new app.
+
+<SurveyPrompt Title="How is Blazor working for you?"/>
+
+@code
+{
+
+    protected override async Task OnInitializedAsync()
+    {
+        InsertCourse();
+        InsertProgramme();
+    }
+
+    private async Task InsertCourse()
+    {
+        Course dnp1 = new Course
+        {
+            Id = "DNP1",
+            Name = "Internet Technologies, C# and .NET",
+            Semester = 3,
+            IsElective = false,
+        };
+
+        using ViaDBContext dbContext = new ViaDBContext();
+
+        await dbContext.Courses.AddAsync(dnp1);
+        await dbContext.SaveChangesAsync();
+
+    }
+
+    private async Task InsertProgramme()
+    {
+        Course SDJ2 = new Course
+        {
+            Id = "SDJ2",
+            Name = "Software Development with Java and UML 2",
+            Semester = 2,
+            IsElective = false
+        };
+        Course GMD = new Course
+        {
+            Id = "GMD1",
+            Name = "Game Development",
+            Semester = 6,
+            IsElective = true
+        };
+
+        List<Course> courses = new List<Course> {GMD, SDJ2};
+        Programme software = new Programme
+        {
+            Location = "Horsens",
+            Name = "Software Technology Engineering",
+            ShortName = "Software",
+            HeadOfDepartment = "AHM",
+            Courses = courses
+        };
+
+        using (ViaDBContext dbContext = new ViaDBContext())
+        {
+            await dbContext.Programmes.AddAsync(software);
+            await dbContext.SaveChangesAsync();
+        }
+    }
+}
